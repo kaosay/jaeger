@@ -16,3 +16,8 @@ services:
       - SPAN_STORAGE_TYPE=memory      # 开发用 memory，生产换下面 elasticsearch 方案
     volumes:
       - ./jaeger-data:/tmp/jaeger      # 防止容器重启数据丢失（内存模式也生效一点）
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 500M
