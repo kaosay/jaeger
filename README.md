@@ -1,2 +1,29 @@
 # jaeger
 How to use and install jaeger
+
+## compose.yaml
+```
+version: "3.8"
+
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    restart: unless-stopped
+    ports:
+      - "16686:16686"   # UI
+      - "16687:16687"   # 可选：jaeger UI 新版端口
+      - "14250:14250"   # gRPC 采集（推荐）
+      - "14268:14268"   # HTTP 采集
+      - "9411:9411"     # Zipkin
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true   # 2024+ 版本默认已开，这里保险起见
+      - SPAN_STORAGE_TYPE=memory      # 开发用 memory，生产换下面 elasticsearch 方案
+    volumes:
+      - ./jaeger-data:/tmp/jaeger      # 防止容器重启数据丢失（内存模式也生效一点）
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 500M
+```
